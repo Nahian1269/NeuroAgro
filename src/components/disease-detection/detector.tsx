@@ -21,7 +21,7 @@ interface DetectorProps {
 }
 
 const formSchema = z.object({
-  image: z.instanceof(FileList).refine((files) => files?.length === 1, "An image is required."),
+  image: z.any().refine((files) => files?.length === 1, "An image is required."),
 });
 
 type FormData = z.infer<typeof formSchema>;
