@@ -21,7 +21,15 @@ interface DetectorProps {
 }
 
 const formSchema = z.object({
-  image: z.any().refine((files) => files?.length === 1, "An image is required."),
+  image: z
+    .any()
+    .refine(
+      (files) => {
+        // This check is to prevent server-side validation of FileList
+        if (typeof window === 'undefined') return true;
+        return files instanceof FileList && files.length > 0
+      }, "An image is required.")
+    .refine((files) => files?.[0]?.size <= 5 * 1024 * 1024, `Max file size is 5MB.`),
 });
 
 type FormData = z.infer<typeof formSchema>;
